@@ -1,3 +1,6 @@
+using Serilog.Formatting.Compact;
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -24,4 +27,25 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.Run();
+var logfile = Path.Combine(Path.GetTempPath(), "DecoratorDesignPatternLog.log");
+
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .WriteTo.File(new RenderedCompactJsonFormatter(), logfile)
+    .WriteTo.Console()
+    .CreateLogger();
+try
+{
+    Log.Information("Starting up");
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application start-up failed");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
+
+
