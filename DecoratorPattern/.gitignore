@@ -1,0 +1,9 @@
+aot/**
+node_modules/**
+dist/**
+npm-debug.log*
+.vscode/**
+.vs/**
+bin/**
+obj/**
+appsettings.json
