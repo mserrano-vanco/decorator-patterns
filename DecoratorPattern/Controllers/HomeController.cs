@@ -9,19 +9,13 @@ namespace DecoratorPattern.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger<HomeController> _logger;
         private readonly IWeatherService _weatherService;
 
-        public HomeController(ILoggerFactory loggerFactory, IConfiguration configuration, IMemoryCache memoryCache)
+        public HomeController(ILogger<HomeController> logger, IWeatherService weatherService)
         {
-            _loggerFactory = loggerFactory;
-            _logger = _loggerFactory.CreateLogger<HomeController>();
-
-            String apiKey = configuration["OpenWeatherMapApiKey"];
-            // _weatherService = new WeatherService(apiKey);
-            _weatherService = new WeatherServiceLoggingDecorator(new WeatherService(apiKey),
-                _loggerFactory.CreateLogger<WeatherServiceLoggingDecorator>());
+            _logger = logger;
+            _weatherService = weatherService;
         }
 
 
